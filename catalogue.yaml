@@ -7,7 +7,7 @@
         state: started
     
     - name: Install NodeJS
-      ansible.builtin.package:
+      ansible.builtin.dnf:
         name: nodejs
         state: present
     
