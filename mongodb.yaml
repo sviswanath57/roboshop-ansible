@@ -8,8 +8,8 @@
         dest: mongo.repo
 
     - name: Install MongoDB
-      ansible.builtin.dnf:
-        name: mongod-org
+      ansible.builtin.package:
+        name: mongodb-org
         state: present
     
     - name: Enable mongodb service
@@ -26,5 +26,5 @@
     
     - name: Enable mongodb service
       ansible.builtin.service:
-          name: mongod
-          state: restarted
+        name: mongod
+        state: restarted
