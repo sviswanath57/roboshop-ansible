@@ -1,0 +1,15 @@
+- name: Catalogue
+  hosts: catalogue
+  tasks:
+    - name: Enable nodejs 18
+      ansible.builtin.command: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+        state: started
+    
+    - name: Install NodeJS
+      ansible.builtin.package:
+        name: nodejs
+        state: present
+    
+    # - name: user add
+    #   ansible.builtin.command: useradd roboshop
+        
