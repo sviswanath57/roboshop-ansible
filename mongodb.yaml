@@ -8,7 +8,7 @@
         dest: mongo.repo
 
     - name: Install MongoDB
-      ansible.builtin.package:
+      ansible.builtin.dnf:
         name: mongodb-org
         state: present
     
