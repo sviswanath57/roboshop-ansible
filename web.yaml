@@ -13,6 +13,11 @@
         state: absent
       register: cleanup
 
+    - name: create html directory
+      ansible.builtin.file:
+        path: /usr/share/nginx/html
+        state: directory
+
     - name: Download catalogue directory files
       ansible.builtin.get_url:
         url: https://roboshop-builds.s3.amazonaws.com/web.zip
@@ -24,13 +29,19 @@
     #     dest: /usr/share/nginx/html
     #     remote_src: yes
 
-    - name: Unarchive/Unzip a file that is already on the web/remote machine
+    # - name: Unarchive/Unzip a file that is already on the web/remote machine
+    #   ansible.builtin.unarchive:
+    #     src: /tmp/web.zip
+    #     dest: /usr/share/nginx/
+    #     creates: /usr/share/nginx/html
+    #     copy: no
+    #     remote_src: yes
+
+    - name: Extract application
       ansible.builtin.unarchive:
         src: /tmp/web.zip
-        dest: /usr/share/nginx/
-        creates: /usr/share/nginx/html
-        copy: no
-        remote_src: yes
+        dest: /usr/share/nginx/html
+      remote_src: yes
   
     - name: Copy the roboshop conf file
       ansible.builtin.copy:
