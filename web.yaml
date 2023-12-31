@@ -9,11 +9,12 @@
   
     # -name: 
 
-    - name: Locating all files in files dir
+    - name: Remove files from html folder
       find:
-        path: "{{ /usr/share/nginx/html/ }}/files"
+        path: /usr/share/nginx/html/
+        state: absent
       register: cleanup
-      ignore_errors: true
+      
 
   # - name: Removing all files previously found in files dir
   #   file:
