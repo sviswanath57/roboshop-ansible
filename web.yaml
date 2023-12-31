@@ -11,7 +11,6 @@
 
     - name: Remove files from html folder
       ansible.builtin.file:
-      find:
         path: /usr/share/nginx/html/
         state: absent
       register: cleanup
