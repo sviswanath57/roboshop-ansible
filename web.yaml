@@ -10,7 +10,7 @@
     # -name: 
 
     - name: Remove files from html folder
-      ansisble.bultin.file:
+      ansisble.builtin.file:
       find:
         path: /usr/share/nginx/html/
         state: absent
