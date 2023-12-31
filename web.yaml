@@ -18,10 +18,18 @@
         url: https://roboshop-builds.s3.amazonaws.com/web.zip
         dest: /tmp
       
+    # - name: Unarchive/Unzip a file that is already on the web/remote machine
+    #   ansible.builtin.unarchive:
+    #     src: /tmp/web.zip
+    #     dest: /usr/share/nginx/html
+    #     remote_src: yes
+
     - name: Unarchive/Unzip a file that is already on the web/remote machine
       ansible.builtin.unarchive:
         src: /tmp/web.zip
-        dest: /usr/share/nginx/html
+        dest: /usr/share/nginx/
+        creates: /usr/share/nginx/html
+        copy: no
         remote_src: yes
   
     - name: Copy the roboshop conf file
