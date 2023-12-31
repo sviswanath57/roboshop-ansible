@@ -7,8 +7,6 @@
         name: nginx
         state: present
   
-    # -name: 
-
     - name: Remove files from html folder
       ansible.builtin.file:
         path: /usr/share/nginx/html/
@@ -23,7 +21,7 @@
     - name: Unarchive/Unzip a file that is already on the web/remote machine
       ansible.builtin.unarchive:
         src: /tmp/web.zip
-        dest: /usr/share/nginx/html/
+        dest: /usr/share/nginx/html
         remote_src: yes
   
     - name: Copy the roboshop conf file
