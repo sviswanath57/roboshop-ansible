@@ -35,10 +35,15 @@
         dest: /app
         remote_src: yes
 
+    # - name: download/install the dependencies
+    #   ansible.builtin.package:
+    #     name: npm
+    #     state: present
+
     - name: download/install the dependencies
-      ansible.builtin.package:
-        name: npm
-        state: present
+      ansible.builtin.command: npm install
+      args:
+        chdir: /app
     
     # - name: reload the catalogue daemon
     #   ansible.builtin.systemd_service:
