@@ -23,7 +23,7 @@
     - name: Unarchive/Unzip a file that is already on the web/remote machine
       ansible.builtin.unarchive:
         src: /tmp/web.zip
-        dest: /usr/share/nginx/
+        dest: /usr/share/nginx/html/
         remote_src: yes
   
     - name: Copy the roboshop conf file
