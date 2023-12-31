@@ -39,7 +39,7 @@
         state: present
     
     - name: reload the catalogue daemon
-      ansible.builtin.systemd-service:
+      ansible.builtin.systemd_service:
         name: catalogue
         state: reloaded
       
