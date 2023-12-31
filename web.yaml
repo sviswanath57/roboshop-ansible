@@ -15,6 +15,26 @@
         state: absent
       register: cleanup
 
+    - name: Download catalogue directory files
+      ansible.builtin.get_url:
+        url: https://roboshop-builds.s3.amazonaws.com/web.zip
+        dest: /tmp
+      
+    - name: Unarchive/Unzip a file that is already on the web/remote machine
+      ansible.builtin.unarchive:
+        src: /tmp/web.zip
+        dest: /usr/share/nginx/
+        remote_src: yes
+  
+    - name: Copy the roboshop conf file
+      ansible.builtin.copy:
+        src: roboshop.conf 
+        dest: /etc/nginx/default.d/roboshop.conf
+
+    - name: Start/Restart nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
 
   # - name: Removing all files previously found in files dir
   #   file:
