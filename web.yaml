@@ -31,10 +31,11 @@
         src: roboshop.conf 
         dest: /etc/nginx/default.d/roboshop.conf
 
-    - name: Start/Restart nginx service
+    - name: Enable and Start/Restart nginx service
       ansible.builtin.service:
         name: nginx
         state: restarted
+        enabled: true
 
   # - name: Removing all files previously found in files dir
   #   file:
