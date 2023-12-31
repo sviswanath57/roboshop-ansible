@@ -37,5 +37,25 @@
       ansible.builtin.package:
         name: npm
         state: present
+    
+    - name: reload the catalogue daemon
+      ansible.builtin.systemd-service:
+        name: catalogue
+        state: reloaded
+      
+    - name: Enable mongodb service
+      ansible.builtin.service:
+        name: catalogue
+        state: started
+        enabled: true
+      
+    - name: setup/copy MongoDB repo
+      ansible.builtin.copy:
+        src: mongo.repo
+        dest: /etc/yum.repos.d
 
-        
+    - name: insall mongodb org shell
+      ansible.builtin.dnf:
+        name: mongodb-org-shell
+        state: present
+
