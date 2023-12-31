@@ -10,11 +10,12 @@
     # -name: 
 
     - name: Remove files from html folder
+      ansisble.bultin.file:
       find:
         path: /usr/share/nginx/html/
         state: absent
       register: cleanup
-      
+
 
   # - name: Removing all files previously found in files dir
   #   file:
