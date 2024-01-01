@@ -64,7 +64,7 @@
 
   - name: print output
     ansible.builtin.debug:
-      msg: "schema output: {{schema}}"
+      msg: "schema output: {{schema.stdout}}"
 
   # - name: load cities data
   #   ansible.builtin.shell: "mysql -h mysql.daws76s.online -uroot -p{{mysql_password}}  < /app/schema/shipping.sql"
