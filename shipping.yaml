@@ -41,7 +41,7 @@
     #     state: present
 
     - name: mvn package
-      ansible.builtin.shell: mvn clean package
+      ansible.builtin.dnf: mvn clean package
       args:
         chdir: /app
 
