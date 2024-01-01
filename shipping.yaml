@@ -40,6 +40,16 @@
     #     name: npm
     #     state: present
 
+    - name: setup/copy shipping service
+      ansible.builtin.copy:
+        src: shipping.service
+        dest: /etc/systemd/system/shipping.service
+    
+    - name: reload the shipping daemon
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        name: shipping
+
     - name: mvn package
       ansible.builtin.dnf: mvn clean package
       args:
@@ -49,18 +59,6 @@
       ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
       args:
         chdir: /app
-    
-    - name: setup/copy shipping service
-      ansible.builtin.copy:
-        src: shipping.service
-        dest: /etc/systemd/system/shipping.service
-
-
-
-    - name: reload the shipping daemon
-      ansible.builtin.systemd_service:
-        daemon_reload: true
-        name: shipping
 
     - name: mysql install
       ansible.builtin.dnf:
