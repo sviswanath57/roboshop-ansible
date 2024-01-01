@@ -66,7 +66,7 @@
         state: present
 
     - name: get the catagories count
-      ansible.builtin.command: mongo --host 54.234.195.75 --quiet --eval 'db = db.getSiblingDB("user"); db.users.count()'
+      ansible.builtin.command: mongo --host 54.242.203.174 --quiet --eval 'db = db.getSiblingDB("user"); db.users.count()'
       register: product_count
 
     - name: print product count just reference
@@ -74,7 +74,7 @@
         msg: '{{users_count}}'
 
     - name: load user to mongodb server
-      ansible.builtin.command: mongo --host 54.234.195.75 < /app/schema/user.js
+      ansible.builtin.command: mongo --host 54.242.203.174 < /app/schema/user.js
       when: users_count.stdout == "0"
 
     - name: Enable/reload user service

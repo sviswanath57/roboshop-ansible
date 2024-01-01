@@ -68,7 +68,7 @@
         state: present
 
     - name: get the catagories count
-      ansible.builtin.command: mongo --host 54.234.195.75 --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
+      ansible.builtin.command: mongo --host 54.242.203.174 --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
       register: product_count
 
     - name: print product count just reference
@@ -76,7 +76,7 @@
         msg: '{{product_count}}'
 
     - name: load catalogue to mongodb server
-      ansible.builtin.command: mongo --host 54.234.195.75 < /app/schema/catalogue.js
+      ansible.builtin.command: mongo --host 54.242.203.174 < /app/schema/catalogue.js
       when: product_count.stdout == "0"
 
     - name: Enable/reload catalogue service
