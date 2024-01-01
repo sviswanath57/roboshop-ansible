@@ -5,6 +5,11 @@
     - name: Disable mysql module
       ansible.builtin.shell: dnf module disable mysql -y
   
+    - name: Setup/Copy the MSSQL repo file
+      ansible.builtin.copy:
+        src: mysql.repo
+        dest: /etc/yum.repos.d/mysql.repo
+
     - name: mysql-community-server install
       ansible.builtin.package:
         name: mysql-community-server
