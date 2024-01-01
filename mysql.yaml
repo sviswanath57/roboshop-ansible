@@ -20,3 +20,7 @@
         name: mysqld
         state: started
         enabled: true
+    
+    - name: MYSQL root password change
+      ansibl.builtin.command: mysql_secure_installation --set-root-pass RoboShop@1
+      
