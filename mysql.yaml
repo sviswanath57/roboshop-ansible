@@ -1,0 +1,17 @@
+- name: MYSQL configuration
+  hosts: mysql
+  become: yes
+  tasks:
+    - name: Disable mysql module
+      ansible.builtin.shell: dnf module disable mysql -y
+  
+    - name: mysql-community-server install
+      ansible.builtin.dnf:
+        name: mysql-community-server
+        state: present
+    
+    - name: Enable mysql service
+      ansible.builtin.service:
+        name: mysql
+        state: started
+        enabled: true
