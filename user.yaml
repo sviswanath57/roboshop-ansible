@@ -1,0 +1,84 @@
+- name: user configurarion
+  hosts: user
+  become: yes
+  tasks:
+    - name: Enable nodejs 18
+      ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+    
+    - name: Install NodeJS
+      ansible.builtin.dnf:
+        name: nodejs
+        state: present
+    
+    - name: user add
+      ansible.builtin.user:
+        name: roboshop
+
+    - name: Create app directory
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    
+    - name: Download user directory files
+      ansible.builtin.get_url:
+        url: https://roboshop-builds.s3.amazonaws.com/user.zip
+        dest: /tmp
+    
+    # - name: This command will change the working directory to app/
+    #   ansible.builtin.shell:
+    #   args:
+    #     chdir: /app
+
+    - name: Unarchive/Unzip a file that is already on the user/remote machine
+      ansible.builtin.unarchive:
+        src: /tmp/user.zip
+        dest: /app
+        remote_src: yes
+
+    # - name: download/install the dependencies
+    #   ansible.builtin.package:
+    #     name: npm
+    #     state: present
+
+    - name: download/install the dependencies
+      ansible.builtin.command: npm install
+      args:
+        chdir: /app
+    
+    - name: setup/copy user service
+      ansible.builtin.copy:
+        src: user.service
+        dest: /etc/systemd/system/user.service
+
+    - name: reload the user daemon
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        name: user
+      
+  - name: Setup/Copy the MongoDB repo file
+      ansible.builtin.copy:
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongo.repo
+
+    - name: insall mongodb org shell client
+      ansible.builtin.dnf:
+        name: mongodb-org-shell
+        state: present
+
+    - name: get the catagories count
+      ansible.builtin.command: mongo --host 54.234.195.75 --quiet --eval 'db = db.getSiblingDB("user"); db.products.count()'
+      register: product_count
+
+    - name: print product count just reference
+      ansible.builtin.debug:
+        msg: '{{product_count}}'
+
+    - name: load user to mongodb server
+      ansible.builtin.command: mongo --host 54.234.195.75 < /app/schema/user.js
+      when: product_count.stdout == "0"
+
+    - name: Enable/reload user service
+      ansible.builtin.service:
+        name: user
+        state: started
+        enabled: true
