@@ -69,7 +69,7 @@
 
     - name: schema exist or not
       ansible.builtin.command: mysql -h 35.174.15.123 -sN -uroot -pRoboShop@1 -e "SELECT COUNT(*) FROM information_schema.schemata WHERE SCHEMA_NAME = 'cities'"
-      resiter: schema
+      register: schema
 
     - name: print schema output
       ansible.builtin.debug:
