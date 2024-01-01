@@ -1,5 +1,6 @@
 - name: replace values in file
   hosts: localhost
+  become: yes
   tasks: 
   - name: Replace value in file
     lineinfile:
