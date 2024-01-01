@@ -1,88 +1,80 @@
-- name: user configurarion
+- name: user
   hosts: user
   become: yes
   tasks:
-    - name: Enable nodejs 18
-      ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
-    
-    - name: Install NodeJS
-      ansible.builtin.dnf:
-        name: nodejs
-        state: present
-    
-    - name: user add
-      ansible.builtin.user:
-        name: roboshop
-    
-    - name: Recursively remove app directory
-      ansible.builtin.file:
-        path: /app
-        state: absent
+  - name: disable old nodejs and enable nodejs
+    ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
 
-    - name: Create app directory
-      ansible.builtin.file:
-        path: /app
-        state: directory
-    
-    - name: Download user directory files
-      ansible.builtin.get_url:
-        url: https://roboshop-builds.s3.amazonaws.com/user.zip
-        dest: /tmp
-    
-    # - name: This command will change the working directory to app/
-    #   ansible.builtin.shell:
-    #   args:
-    #     chdir: /app
+  - name: Install nodejs
+    ansible.builtin.dnf:
+      name: nodejs 
+      state: present
 
-    - name: Unarchive/Unzip a file that is already on the user/remote machine
-      ansible.builtin.unarchive:
-        src: /tmp/user.zip
-        dest: /app
-        remote_src: yes
+  - name: create roboshop user
+    ansible.builtin.user:
+      name: roboshop
 
-    # - name: download/install the dependencies
-    #   ansible.builtin.package:
-    #     name: npm
-    #     state: present
+  - name: Recursively remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
 
-    - name: download/install the dependencies
-      ansible.builtin.command: npm install
-      args:
-        chdir: /app
-    
-    - name: setup/copy user service
-      ansible.builtin.copy:
-        src: user.service
-        dest: /etc/systemd/system/user.service
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
 
-    - name: reload the user daemon
-      ansible.builtin.systemd_service:
-        daemon_reload: true
-      
-    - name: Setup/Copy the MongoDB repo file
-      ansible.builtin.copy:
-        src: mongo.repo
-        dest: /etc/yum.repos.d/mongo.repo
+  - name: download user application
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/user.zip
+      dest: /tmp
 
-    - name: insall mongodb org shell client
-      ansible.builtin.package:
-        name: mongodb-org-shell
-        state: present
+  - name: extract user application
+    ansible.builtin.unarchive:
+      src: /tmp/user.zip
+      dest: /app
+      remote_src: yes
 
-    - name: get the catagories count
-      ansible.builtin.command: mongo --host 54.242.203.174 --quiet --eval 'db = db.getSiblingDB("user"); db.users.count()'
-      register: users_count
+  - name: Install dependencies
+    ansible.builtin.command: npm install
+    args:
+      chdir: /app
 
-    - name: print users count just reference
-      ansible.builtin.debug:
-        msg: '{{users_count}}'
+  - name: Copy user service
+    ansible.builtin.copy:
+      src: user.service
+      dest: /etc/systemd/system/user.service
 
-    - name: load user to mongodb server
-      ansible.builtin.command: mongo --host 54.242.203.174 < /app/schema/user.js
-      when: users_count.stdout == "0"
+  - name: deamon realod and start
+    ansible.builtin.systemd_service:
+      daemon_reload: true
 
-    - name: Enable/reload user service
-      ansible.builtin.service:
-        name: user
-        state: restarted
-        enabled: true
+  # let's start after the data is loaded
+
+  - name: Copy mongodb repo
+    ansible.builtin.copy:
+      src: mongodb.repo
+      dest: /etc/yum.repos.d/mongodb.repo
+
+  - name: Install mongodb client
+    ansible.builtin.package:
+      name: mongodb-org-shell
+      state: present
+
+  - name: get the users count
+    ansible.builtin.command:  mongo --host mongodb.daws76s.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+    register: user_count
+
+  # - name: print the count
+  #   ansible.builtin.debug:
+  #     msg: "product count: {{user_count}}"
+
+  - name: load user data
+    ansible.builtin.command: mongo --host mongodb.daws76s.online < /app/schema/user.js
+    when: user_count.stdout == "0" # keep double quotes
+
+  - name: start and enable user
+    ansible.builtin.service:
+      name: user
+      state: restarted
+      enabled: yes
