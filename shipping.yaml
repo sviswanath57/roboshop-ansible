@@ -61,7 +61,7 @@
       ansible.builtin.systemd_service:
         daemon_reload: true
         name: shipping
-        
+
     - name: mysql install
       ansible.builtin.dnf:
         name: mysql
@@ -73,7 +73,7 @@
 
     - name: print schema output
       ansible.builtin.debug:
-        msg: {{schema}}
+        msg: "{{schema}}""
       
     # - name: load schema
     #   ansible.builtin.command: mysql -h 35.174.15.123 -uroot -pRoboShop@1 < /app/schema/shipping.sql 
