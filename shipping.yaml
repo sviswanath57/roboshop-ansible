@@ -61,3 +61,19 @@
       ansible.builtin.systemd_service:
         daemon_reload: true
         name: shipping
+        
+    - name: mysql install
+      ansible.builtin.dnf:
+        name: mysql
+        state: present
+
+    - name: schema exist or not
+      ansible.builtin.command: mysql -h 35.174.15.123 -sN -uroot -pRoboShop@1 -e "SELECT COUNT(*) FROM information_schema.schemata WHERE SCHEMA_NAME = 'cities'"
+      resiter: schema
+
+    - name: print schema output
+      ansible.builtin.debug:
+        msg: {{schema}}
+      
+    # - name: load schema
+    #   ansible.builtin.command: mysql -h 35.174.15.123 -uroot -pRoboShop@1 < /app/schema/shipping.sql 
