@@ -1,0 +1,9 @@
+- name: replace values in file
+  hosts: localhost
+  tasks: 
+  - name: Replace value in file
+    lineinfile:
+      path: example.conf
+      regexp: '^{{item.key}}:'
+      line: "{{item.key}}: {{item.value}}"
+    with_dict: {name: Michael, age: 31, city: San Francisco}
