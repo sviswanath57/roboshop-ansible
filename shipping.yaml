@@ -51,7 +51,7 @@
         name: shipping
 
     - name: mvn package
-      ansible.builtin.dnf: mvn clean package
+      ansible.builtin.package: mvn clean package
       args:
         chdir: /app
 
