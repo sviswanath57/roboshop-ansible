@@ -67,9 +67,9 @@
 
     - name: get the catagories count
       ansible.builtin.command: mongo --host 54.242.203.174 --quiet --eval 'db = db.getSiblingDB("user"); db.users.count()'
-      register: product_count
+      register: users_count
 
-    - name: print product count just reference
+    - name: print users count just reference
       ansible.builtin.debug:
         msg: '{{users_count}}'
 
