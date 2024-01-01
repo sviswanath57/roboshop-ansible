@@ -75,5 +75,4 @@
       ansible.builtin.debug:
         msg: "{{schema}}""
       
-    # - name: load schema
-    #   ansible.builtin.command: mysql -h 35.174.15.123 -uroot -pRoboShop@1 < /app/schema/shipping.sql 
+
